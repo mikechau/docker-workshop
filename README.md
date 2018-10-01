@@ -1,6 +1,6 @@
 # docker-workshop
 
-This repo is a workshop for introducting Docker.
+This repo is a workshop for introducing Docker.
 
 ## Use Case
 
@@ -302,34 +302,82 @@ We can see the difference in sizes between the layers. Alpine Linux just has les
 Tags help us provide human readable identifiers for the Docker images we build and pull.
 
 ```bash
-# build example
-
-# push example
-
+docker build . -t docker101 -t docker102 -t docker101:0.0.1
 ```
+
+Tags help us version control our images and we can apply multiple tags to an image.
+
+In order to share our image with others, we need to push it to a registry. By default images will go to the Docker registry.
+
+```bash
+docker push $TAG_NAME
+```
+
+## Running
+
+OK, we built our container. Let's run it!
+
+```bash
+# by default it starts the server
+docker run -it docker101
+
+# lets get into the shell for the running container
+docker exec -it docker101 /bin/sh
+```
+
+## Ports
+
+The container is running, but we can't access the web server from our host. Let's change that.
+
+```bash
+docker run -it -p 3000:3000 docker101
+```
+
+Here we are forwarding the host port of 3000 to the docker container port 3000.
 
 ## Clean up
 
 As we can see from our first few attempts at building Docker images, space can get eaten up really quick if you are not keeping watch!
 
 ```bash
-# docker system prune
+# Remove all unused containers, networks, images (both dangling and unreferenced), and optionally, volumes.
+docker system prune
 
-# docker image rm
+docker image rm $REPO:$TAG
+docker image rm $IMAGE_ID
 
 # docker filters for multistage
+docker image prune --filter label=build.stage=intermediate
+docker image prune --filter label=build.project=docker101 --filter label=build.stage=intermediate
 ```
 
 ## Volumes
 
-## Ports
+We can also share data from our host to the docker container.
+
+```bash
+docker run -it docker101 -v /tmp:/host_tmp /bin/sh
+```
+
+However, keep in mind by default the UID inside the container is 0, since we are root.
+
+We might want to pass in `-u` and set the UID to match our host user.
+
+```bash
+docker run -it docker101 -u $(id -u) -v /tmp:/host_tmp /bin/sh
+```
+
+Mounting volumes and managing UIDs can get tricky, so try not to rely on them. But sometimes we really do need file persistence, so keep UIDs in mind.
 
 ## Troubleshooting
 
 ```bash
-# docker images
+# list the docker images
+docker images
 
-# docker inspect
+# inspect docker objects, such as an image or container
+docker inspect $IMAGE_ID_OR_CONTAINER_ID
 
-# docker history
+# view a log of a docker image
+docker history $IMAGE_ID
 ```
