@@ -8,23 +8,28 @@ RUN set -eux \
   && apt-get -y update \
   && apt-get -y upgrade \
   && apt-get -y clean \
-  && rm -rf /var/lib/apt/lists/*
+  && rm -rf /var/lib/apt/lists/* \
+  && mkdir -p /server
 
 COPY . "${SRC_DIR}"
+
+RUN set -eux \
+  && make \
+  && mv dist/app /server/app
+
 
 LABEL build.stage="intermediate"
 
 ###############################################################################
 
-RUN set -eux \
-  && make
-
 FROM alpine:3.8
 
 WORKDIR /server
 
-COPY --from=go /dist/app .
+COPY --from=go /server/app .
 
 EXPOSE 3000
 
 CMD ["./server/app"]
+
+LABEL build.stage="final"

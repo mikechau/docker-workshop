@@ -8,9 +8,17 @@ RUN set -eux \
   && apt-get -y update \
   && apt-get -y upgrade \
   && apt-get -y clean \
-  && rm -rf /var/lib/apt/lists/*
+  && rm -rf /var/lib/apt/lists/* \
+  && mkdir -p /server
 
 COPY . "${SRC_DIR}"
 
 RUN set -eux \
-  && make
+  && make \
+  && mv dist/app /server/app
+
+EXPOSE 3000
+
+WORKDIR /server
+
+CMD ["./app"]
