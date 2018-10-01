@@ -1,3 +1,7 @@
 FROM golang:1.11.0
 
+COPY dist/app .
+
 EXPOSE 3000
+
+CMD ["./app"]

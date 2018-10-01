@@ -4,12 +4,17 @@ ENV SRC_DIR=/go/src/app
 
 WORKDIR "${SRC_DIR}"
 
-RUN set -eux \
-  && apt-get -y update \
-  && apt-get -y clean \
-  && rm -rf /var/lib/apt/lists/*
+RUN apt-get -y update
+RUN apt-get -y upgrade
+RUN mkdir -p /server
 
 COPY . "${SRC_DIR}"
 
-RUN set -eux \
-  && make
+RUN make
+RUN mv dist/app /server/app
+
+EXPOSE 3000
+
+WORKDIR /server
+
+CMD ["./app"]
