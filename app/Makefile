@@ -1,7 +1,7 @@
 .PHONY: build clean
 
 build: clean
-	go build -a -installsuffix cgo -o dist/app
+	GO111MODULE=on CGO_ENABLED=0 go build -a -installsuffix cgo -o dist/app
 
 clean:
 	rm -rf dist
