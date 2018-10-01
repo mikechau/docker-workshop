@@ -1,0 +1,15 @@
+FROM golang:1.11.0
+
+ENV SRC_DIR=/go/src/app
+
+WORKDIR "${SRC_DIR}"
+
+RUN set -eux \
+  && apt-get -y update \
+  && apt-get -y clean \
+  && rm -rf /var/lib/apt/lists/*
+
+COPY . "${SRC_DIR}"
+
+RUN set -eux \
+  && make
