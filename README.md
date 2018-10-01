@@ -295,7 +295,7 @@ fc54ea6511ec        7 minutes ago        /bin/sh -c #(nop) WORKDIR /server      
 <missing>           2 weeks ago          /bin/sh -c #(nop) ADD file:25c10b1d1b41d46a1…   4.41MB  
 ```
 
-We can see the difference in sizes between the layers. Alpine Linux just has less stuff compared to Debian, and works great when we our application compiles down to a binary.
+We can see the difference in sizes between the layers. Alpine Linux just has less stuff compared to Debian, and works great when our application compiles down to a binary.
 
 ## Tagging
 
